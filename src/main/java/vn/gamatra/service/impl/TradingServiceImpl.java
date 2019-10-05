@@ -44,7 +44,7 @@ public class TradingServiceImpl implements TradingService {
                 throw new NullPointerException("Category form data can not null!");
             }
 
-            CategoryEntity categoryEntity = new CategoryEntity();
+            CategoryEntity categoryEntity;
 
             modelMapper.getConfiguration().setAmbiguityIgnored(true);
             categoryEntity = modelMapper.map(categoryForm, CategoryEntity.class);

@@ -12,6 +12,7 @@ import vn.gamatra.form.CategorySearchForm;
 import vn.gamatra.service.TradingService;
 
 @RestController
+@CrossOrigin(value = "*")
 @RequestMapping(value = CommonConst.BASE_API_URL)
 public class TradingController {
 
