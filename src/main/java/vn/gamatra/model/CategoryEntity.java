@@ -35,6 +35,9 @@ public class CategoryEntity implements Serializable {
     @Column(name = "url_logo")
     private String urlLogo;
 
+    @Column(name = "url_banner")
+    private String urlBanner;
+
     @Column(name = "path")
     private String path;
 

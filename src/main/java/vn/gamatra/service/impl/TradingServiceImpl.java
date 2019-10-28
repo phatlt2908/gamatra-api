@@ -48,6 +48,7 @@ public class TradingServiceImpl implements TradingService {
 
             modelMapper.getConfiguration().setAmbiguityIgnored(true);
             categoryEntity = modelMapper.map(categoryForm, CategoryEntity.class);
+            categoryEntity.setIsParent(false);
             categoryEntity.setIsActive(true);
             categoryEntity.setCreateUserCode("Admin");
             categoryEntity.setCreateDate(new Date());
@@ -79,7 +80,7 @@ public class TradingServiceImpl implements TradingService {
 
             StringBuilder sql = new StringBuilder();
 
-            sql.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.path, cate.description) ")
+            sql.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.urlBanner, cate.path, cate.description) ")
                     .append("FROM CategoryEntity cate ")
                     .append("WHERE cate.isParent = TRUE AND cate.isActive = TRUE");
 
@@ -93,7 +94,7 @@ public class TradingServiceImpl implements TradingService {
 
                 StringBuilder childSql = new StringBuilder();
 
-                childSql.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.path, cate.description) ")
+                childSql.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.urlBanner, cate.path, cate.description) ")
                         .append("FROM CategoryEntity cate ")
                         .append("WHERE cate.isParent = FALSE AND cate.isActive = TRUE ")
                         .append("AND cate.path LIKE '/" + parentCode + "/%'");

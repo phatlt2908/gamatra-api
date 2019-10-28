@@ -27,6 +27,8 @@ public class CategoryForm implements Serializable {
 
     private String urlLogo;
 
+    private String urlBanner;
+
     @NotEmpty
     @Size(max = 50)
     private String path;
