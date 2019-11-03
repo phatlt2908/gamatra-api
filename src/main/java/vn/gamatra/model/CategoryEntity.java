@@ -50,6 +50,9 @@ public class CategoryEntity implements Serializable {
     @Column(name = "is_parent")
     private Boolean isParent;
 
+    @Column(name = "sort_num")
+    private Integer sortNum;
+
     @Column(name = "create_user_code")
     private String createUserCode;
 

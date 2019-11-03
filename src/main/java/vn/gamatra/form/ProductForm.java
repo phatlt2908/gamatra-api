@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class CategoryForm implements Serializable {
+public class ProductForm implements Serializable {
     public static final long serialVersionUID = 1L;
 
     @NotEmpty
@@ -24,14 +24,22 @@ public class CategoryForm implements Serializable {
     @Size(max = 100)
     private String name;
 
-    private String urlLogo;
+    @Size(max = 10)
+    private String categoryCode;
 
-    private String urlBanner;
-
-    @NotEmpty
-    @Size(max = 50)
-    private String path;
+    @Size(max = 100)
+    private String categoryOtherName;
 
     @Size(max = 200)
     private String descripton;
+
+    private Double price;
+
+    private Integer quantity;
+
+    private String addressCity;
+
+    private String addressDistrict;
+
+    private String addressFull;
 }

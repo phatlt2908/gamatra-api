@@ -9,6 +9,7 @@ import vn.gamatra.dto.BaseDto;
 import vn.gamatra.form.BaseSearchForm;
 import vn.gamatra.form.CategoryForm;
 import vn.gamatra.form.CategorySearchForm;
+import vn.gamatra.form.ProductForm;
 import vn.gamatra.service.TradingService;
 
 @RestController
@@ -19,18 +20,18 @@ public class TradingController {
     @Autowired
     TradingService tradingService;
 
-	@GetMapping(value = "/test")
-    public String getProduct(){
-        return "test";
-    }
-
-    @PostMapping(value = APIConst.REGIST_UPDATE_CATEGORY, produces = CommonConst.JSON_UTF8)
-    public ResponseEntity<BaseDto> registUpdateCategory(@RequestBody CategoryForm form) {
-	    return tradingService.registCategory(form);
+    @PostMapping(value = APIConst.SAVE_CATEGORY, produces = CommonConst.JSON_UTF8)
+    public ResponseEntity<BaseDto> saveCategory(@RequestBody CategoryForm form) {
+	    return tradingService.saveCategory(form);
     }
 
     @PostMapping(value = APIConst.GET_CATEGORY_LIST, produces = CommonConst.JSON_UTF8)
     public ResponseEntity<?> getCategoryList(@RequestBody BaseSearchForm<CategorySearchForm> form) {
 	    return tradingService.getCategoryList(form);
+    }
+
+    @PostMapping(value = APIConst.SAVE_PRODUCT, produces = CommonConst.JSON_UTF8)
+    public ResponseEntity<?> saveProduct(@RequestBody ProductForm productForm) {
+        return tradingService.saveProduct(productForm);
     }
 }

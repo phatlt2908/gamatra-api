@@ -37,13 +37,13 @@ public class ProductEntity implements Serializable {
     private String descripton;
 
     @Column(name = "is_mall")
-    private Boolean isMall;
+    private Boolean isMall = false;
 
     @Column(name = "is_approved")
-    private Boolean isApproved;
+    private Boolean isApproved = false;
 
     @Column(name = "is_checked")
-    private Boolean isChecked;
+    private Boolean isChecked = false;
 
     @Column(name = "reject_reason")
     private String rejectReason;
@@ -55,10 +55,10 @@ public class ProductEntity implements Serializable {
     private Integer quantity;
 
     @Column(name = "seen_count")
-    private Integer seenCount;
+    private Integer seenCount = 0;
 
     @Column(name = "bought_count")
-    private Integer boughtCount;
+    private Integer boughtCount = 0;
 
     @Column(name = "create_user_code")
     private String createUserCode;

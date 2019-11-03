@@ -9,12 +9,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.gamatra.constant.AppCodeConst;
 import vn.gamatra.dto.BaseDto;
+import vn.gamatra.dto.BaseSearchResponse;
 import vn.gamatra.dto.CategoryListDto;
 import vn.gamatra.form.BaseSearchForm;
 import vn.gamatra.form.CategoryForm;
 import vn.gamatra.form.CategorySearchForm;
+import vn.gamatra.form.ProductForm;
 import vn.gamatra.model.CategoryEntity;
+import vn.gamatra.model.ProductEntity;
 import vn.gamatra.repository.CategoryRepository;
+import vn.gamatra.repository.ProductRepository;
+import vn.gamatra.response.Pagination;
 import vn.gamatra.service.TradingService;
 
 import javax.persistence.EntityManager;
@@ -33,12 +38,15 @@ public class TradingServiceImpl implements TradingService {
     CategoryRepository categoryRepository;
 
     @Autowired
+    ProductRepository productRepository;
+
+    @Autowired
     EntityManager entityManager;
 
     private static final ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public ResponseEntity<BaseDto> registCategory(CategoryForm categoryForm) {
+    public ResponseEntity<BaseDto> saveCategory(CategoryForm categoryForm) {
         try {
             if (!Objects.nonNull(categoryForm)) {
                 throw new NullPointerException("Category form data can not null!");
@@ -78,13 +86,42 @@ public class TradingServiceImpl implements TradingService {
         try {
             List<CategoryListDto> categoryList;
 
-            StringBuilder sql = new StringBuilder();
+            StringBuilder sqlCount = new StringBuilder();
+            StringBuilder sqlSelect = new StringBuilder();
+            StringBuilder sqlCondition = new StringBuilder();
 
-            sql.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.urlBanner, cate.path, cate.description) ")
-                    .append("FROM CategoryEntity cate ")
+            sqlCount.append("SELECT COUNT(cate.code) ");
+
+            sqlSelect.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.urlBanner, cate.path, cate.description) ");
+
+            sqlCondition.append("FROM CategoryEntity cate ")
                     .append("WHERE cate.isParent = TRUE AND cate.isActive = TRUE");
 
-            TypedQuery<CategoryListDto> querySelect = entityManager.createQuery(sql.toString(), CategoryListDto.class);
+            // generate sql count and sql select list
+            sqlCount.append(sqlCondition);
+            sqlSelect.append(sqlCondition);
+
+            TypedQuery<Long> queryCount = entityManager.createQuery(sqlCount.toString(), Long.class);
+            TypedQuery<CategoryListDto> querySelect = entityManager.createQuery(sqlSelect.toString(), CategoryListDto.class);
+
+            long totalRow = queryCount.getSingleResult();
+
+            // Generate pagination
+            Integer currentPage;
+            Integer itemsPerPage;
+            if ((Objects.nonNull(form.getPagination().getCurrentPage()) && form.getPagination().getCurrentPage() > 0)
+                    && Objects.nonNull(form.getPagination().getItemsPerPage()) && form.getPagination().getItemsPerPage() > 0) {
+                currentPage = form.getPagination().getCurrentPage();
+                itemsPerPage = form.getPagination().getItemsPerPage();
+            } else {
+                currentPage = 0;
+                itemsPerPage = 0;
+            }
+            if (currentPage > 0 && itemsPerPage > 0) {
+                Integer startIndex = (currentPage * itemsPerPage) - itemsPerPage;
+                querySelect.setFirstResult(startIndex);
+                querySelect.setMaxResults(itemsPerPage);
+            }
 
             categoryList = querySelect.getResultList();
 
@@ -97,7 +134,8 @@ public class TradingServiceImpl implements TradingService {
                 childSql.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.urlBanner, cate.path, cate.description) ")
                         .append("FROM CategoryEntity cate ")
                         .append("WHERE cate.isParent = FALSE AND cate.isActive = TRUE ")
-                        .append("AND cate.path LIKE '/" + parentCode + "/%'");
+                        .append("AND cate.path LIKE '/" + parentCode + "/%'")
+                        .append("ORDER BY cate.sortNum ASC, cate.id ASC");
 
                 TypedQuery<CategoryListDto> queryChildSelect = entityManager.createQuery(childSql.toString(), CategoryListDto.class);
 
@@ -106,7 +144,25 @@ public class TradingServiceImpl implements TradingService {
                 category.setSubCategory(categoryChildList);
             }
 
-            return ResponseEntity.ok(categoryList);
+            // Set pagination response
+            Pagination pagination = new Pagination();
+            pagination.setCurrentPage(form.getPagination().getCurrentPage());
+            pagination.setItemsPerPage(form.getPagination().getItemsPerPage());
+            pagination.setTotalItemCount(totalRow);
+            pagination.setSort((form.getPagination().getSort()));
+            pagination.setSortOrder(form.getPagination().getSortOrder());
+
+            //Set queries response
+            CategorySearchForm queries = new CategorySearchForm();
+            queries.setKeywords(form.getQueries().getKeywords());
+
+            // Return data
+            BaseSearchResponse response = new BaseSearchResponse();
+            response.setItems(categoryList);
+            response.setPagination(pagination);
+            response.setQueries(queries);
+
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -114,5 +170,17 @@ public class TradingServiceImpl implements TradingService {
             base.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             return new ResponseEntity<>(base, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public ResponseEntity<?> saveProduct(ProductForm productForm) {
+        ProductEntity product;
+
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
+        product = modelMapper.map(productForm, ProductEntity.class);
+
+        productRepository.save(product);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
