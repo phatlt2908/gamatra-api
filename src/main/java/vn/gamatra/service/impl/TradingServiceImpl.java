@@ -24,7 +24,6 @@ import vn.gamatra.service.TradingService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -178,6 +177,9 @@ public class TradingServiceImpl implements TradingService {
 
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         product = modelMapper.map(productForm, ProductEntity.class);
+
+        product.setCreateUserCode("test");
+        product.setCreateDate(new Date());
 
         productRepository.save(product);
 

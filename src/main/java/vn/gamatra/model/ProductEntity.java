@@ -60,6 +60,15 @@ public class ProductEntity implements Serializable {
     @Column(name = "bought_count")
     private Integer boughtCount = 0;
 
+    @Column(name = "address_city")
+    private String addressCity;
+
+    @Column(name = "address_district")
+    private String addressDistrict;
+
+    @Column(name = "address_full")
+    private String addressFull;
+
     @Column(name = "create_user_code")
     private String createUserCode;
 
