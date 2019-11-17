@@ -19,7 +19,7 @@ public class CustomUserDetails implements UserDetails {
     @Autowired
     UserRoleRepository userRoleRepository;
 
-    UserEntity user;
+    private UserEntity user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

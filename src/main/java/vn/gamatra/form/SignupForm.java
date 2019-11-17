@@ -49,6 +49,9 @@ public class SignupForm implements Serializable {
     private String addressDistrict;
 
     @NotBlank
-    @Size(max = 30)
+    @Size(max = 100)
     private String addressFull;
+
+    @Size(max = 200)
+    private String urlAvatar;
 }

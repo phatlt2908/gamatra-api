@@ -1,8 +1,10 @@
 package vn.gamatra.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,22 +36,30 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping(APIConst.LOGIN)
-    public LoginDto authenticateUser(@Valid @RequestBody LoginForm form) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        form.getUserCodeOrPhoneOrEmail(),
-                        form.getPassword()
-                )
-        );
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm form) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            form.getUserCodeOrPhoneOrEmail(),
+                            form.getPassword()
+                    )
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
-        return new LoginDto(jwt);
+            String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
+            return new ResponseEntity(jwt, HttpStatus.OK);
+        } catch (DisabledException ex) {
+            BaseDto baseDto = new BaseDto();
+            baseDto.setAppCode("TODO"); // TODO
+            baseDto.setStatus(HttpStatus.FORBIDDEN.value());
+            baseDto.setMessage("User have not active yet!");
+            return new ResponseEntity(baseDto, HttpStatus.FORBIDDEN);
+        }
     }
 
     @PostMapping(APIConst.SIGNUP)
-    public ResponseEntity<?> registUser(@Valid @RequestBody SignupForm form) {
-        return authService.registUser(form);
+    public ResponseEntity<?> saveUser(@Valid @RequestBody SignupForm form) {
+        return authService.saveUser(form);
     }
 }

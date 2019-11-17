@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "user", schema = "public")
 public class UserEntity implements Serializable {
 
     public static final long serialVersionUID = 1L;
