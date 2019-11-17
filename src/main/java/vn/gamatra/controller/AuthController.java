@@ -8,25 +8,32 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import vn.gamatra.config.JwtTokenProvider;
+import vn.gamatra.constant.APIConst;
 import vn.gamatra.constant.CommonConst;
+import vn.gamatra.dto.BaseDto;
 import vn.gamatra.dto.LoginDto;
 import vn.gamatra.form.LoginForm;
+import vn.gamatra.form.SignupForm;
 import vn.gamatra.model.CustomUserDetails;
+import vn.gamatra.service.AuthService;
 
 import javax.validation.Valid;
 
 @RestController
 @CrossOrigin(value = "*")
-@RequestMapping(value = CommonConst.BASE_API_URL + "/auth")
+@RequestMapping(value = CommonConst.BASE_API_URL + APIConst.BASE_AUTH)
 public class AuthController {
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    JwtTokenProvider tokenProvider;
+    private JwtTokenProvider tokenProvider;
 
-    @PostMapping("/login")
+    @Autowired
+    private AuthService authService;
+
+    @PostMapping(APIConst.LOGIN)
     public LoginDto authenticateUser(@Valid @RequestBody LoginForm form) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -41,8 +48,8 @@ public class AuthController {
         return new LoginDto(jwt);
     }
 
-    @GetMapping(value = "/test", produces = CommonConst.JSON_UTF8)
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Teng teng teng");
+    @PostMapping(APIConst.SIGNUP)
+    public ResponseEntity<?> registUser(@Valid @RequestBody SignupForm form) {
+        return authService.registUser(form);
     }
 }

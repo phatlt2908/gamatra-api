@@ -20,7 +20,7 @@ public class SignupForm implements Serializable {
 
     @NotBlank
     @Size(max = 50)
-    private String userName;
+    private String userCode;
 
     @NotBlank
     @Size(max = 256)

@@ -12,12 +12,10 @@ import vn.gamatra.model.UserEntity;
 public interface UserRepository
         extends JpaRepository<UserEntity, Long>, JpaSpecificationExecutor<UserEntity> {
 
-    /**
-     * Get user by code
-     * @author PhatLT
-     * @param code
-     * @return
-     */
     UserEntity findByCode(@Param("code") String code);
+
+    UserEntity findByEmail(@Param("email") String email);
+
+    UserEntity findByPhone(@Param("phone") String phone);
 
 }
