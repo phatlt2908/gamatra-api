@@ -13,7 +13,7 @@ import vn.gamatra.config.JwtTokenProvider;
 import vn.gamatra.constant.APIConst;
 import vn.gamatra.constant.CommonConst;
 import vn.gamatra.dto.BaseDto;
-import vn.gamatra.dto.LoginDto;
+import vn.gamatra.dto.auth.LoginDto;
 import vn.gamatra.form.LoginForm;
 import vn.gamatra.form.SignupForm;
 import vn.gamatra.model.CustomUserDetails;
@@ -48,7 +48,7 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
-            return new ResponseEntity(jwt, HttpStatus.OK);
+            return new ResponseEntity(new LoginDto(jwt), HttpStatus.OK);
         } catch (DisabledException ex) {
             BaseDto baseDto = new BaseDto();
             baseDto.setAppCode("TODO"); // TODO

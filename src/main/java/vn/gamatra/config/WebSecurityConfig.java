@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import vn.gamatra.constant.APIConst;
 import vn.gamatra.constant.CommonConst;
 import vn.gamatra.service.impl.UserServiceImpl;
 
@@ -59,7 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
         .csrf().disable()
         .authorizeRequests()
-        .antMatchers(CommonConst.BASE_API_URL + "/admin/**").authenticated()
+        .antMatchers(CommonConst.BASE_API_URL + APIConst.BASE_ADMIN + "/**").hasRole(CommonConst.ADMIN_ROLE_CODE)
+        .antMatchers(CommonConst.BASE_API_URL + APIConst.BASE_CUSTOMER + "/**").authenticated()
         .anyRequest().permitAll();
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

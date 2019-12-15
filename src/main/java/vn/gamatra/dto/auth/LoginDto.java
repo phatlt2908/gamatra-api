@@ -1,4 +1,4 @@
-package vn.gamatra.dto;
+package vn.gamatra.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

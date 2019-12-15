@@ -17,7 +17,7 @@ public class ProductForm implements Serializable {
     public static final long serialVersionUID = 1L;
 
     @NotEmpty
-    @Size(max = 10)
+    @Size(max = 30)
     private String code;
 
     @NotEmpty

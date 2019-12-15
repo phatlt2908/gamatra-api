@@ -27,6 +27,7 @@ import javax.persistence.TypedQuery;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -41,6 +42,9 @@ public class TradingServiceImpl implements TradingService {
 
     @Autowired
     EntityManager entityManager;
+
+    @Autowired
+    CommonFunction commonFunction;
 
     private static final ModelMapper modelMapper = new ModelMapper();
 
@@ -117,7 +121,7 @@ public class TradingServiceImpl implements TradingService {
                 itemsPerPage = 0;
             }
             if (currentPage > 0 && itemsPerPage > 0) {
-                Integer startIndex = (currentPage * itemsPerPage) - itemsPerPage;
+                int startIndex = (currentPage * itemsPerPage) - itemsPerPage;
                 querySelect.setFirstResult(startIndex);
                 querySelect.setMaxResults(itemsPerPage);
             }
@@ -133,7 +137,7 @@ public class TradingServiceImpl implements TradingService {
                 childSql.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.urlBanner, cate.path, cate.description) ")
                         .append("FROM CategoryEntity cate ")
                         .append("WHERE cate.isParent = FALSE AND cate.isActive = TRUE ")
-                        .append("AND cate.path LIKE '/" + parentCode + "/%'")
+                        .append("AND cate.path LIKE '/").append(parentCode).append("/%'")
                         .append("ORDER BY cate.sortNum ASC, cate.id ASC");
 
                 TypedQuery<CategoryListDto> queryChildSelect = entityManager.createQuery(childSql.toString(), CategoryListDto.class);
@@ -178,6 +182,12 @@ public class TradingServiceImpl implements TradingService {
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         product = modelMapper.map(productForm, ProductEntity.class);
 
+        Date currentDate = new Date();
+        long millis = currentDate.getTime();
+
+        String randText = commonFunction.generateRandomString(5);
+
+        product.setCode(productForm.getCategoryCode() + "_" + millis + "_" + randText);
         product.setCreateUserCode("test");
         product.setCreateDate(new Date());
 

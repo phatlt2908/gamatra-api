@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import vn.gamatra.repository.UserRoleRepository;
 
+import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,13 +22,10 @@ public class CustomUserDetails implements UserDetails {
 
     private UserEntity user;
 
+    private Collection<? extends GrantedAuthority> authorities;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities;
-        List<UserRoleEntity> userRoles = userRoleRepository.findByUserCode(user.getCode());
-        authorities = userRoles.stream().map(role ->
-                new SimpleGrantedAuthority(role.getRoleCode())
-        ).collect(Collectors.toList());
         return authorities;
     }
 
@@ -61,7 +59,8 @@ public class CustomUserDetails implements UserDetails {
         return user.getIsActive();
     }
 
-    public CustomUserDetails(UserEntity user) {
+    public CustomUserDetails(UserEntity user, Collection<? extends GrantedAuthority> authorities) {
         this.user = user;
+        this.authorities = authorities;
     }
 }
