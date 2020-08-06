@@ -36,17 +36,8 @@ public class ProductEntity implements Serializable {
     @Column(name = "descripton")
     private String descripton;
 
-    @Column(name = "is_mall")
-    private Boolean isMall = false;
-
-    @Column(name = "is_approved")
-    private Boolean isApproved = false;
-
-    @Column(name = "is_checked")
-    private Boolean isChecked = false;
-
-    @Column(name = "reject_reason")
-    private String rejectReason;
+    @Column(name = "detail")
+    private String detail;
 
     @Column(name = "price")
     private Double price;
@@ -59,15 +50,6 @@ public class ProductEntity implements Serializable {
 
     @Column(name = "bought_count")
     private Integer boughtCount = 0;
-
-    @Column(name = "address_city")
-    private String addressCity;
-
-    @Column(name = "address_district")
-    private String addressDistrict;
-
-    @Column(name = "address_full")
-    private String addressFull;
 
     @Column(name = "create_user_code")
     private String createUserCode;

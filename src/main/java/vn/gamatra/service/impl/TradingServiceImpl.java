@@ -27,7 +27,6 @@ import javax.persistence.TypedQuery;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -95,7 +94,7 @@ public class TradingServiceImpl implements TradingService {
 
             sqlCount.append("SELECT COUNT(cate.code) ");
 
-            sqlSelect.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.urlBanner, cate.path, cate.description) ");
+            sqlSelect.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.path, cate.description) ");
 
             sqlCondition.append("FROM CategoryEntity cate ")
                     .append("WHERE cate.isParent = TRUE AND cate.isActive = TRUE");
@@ -134,7 +133,7 @@ public class TradingServiceImpl implements TradingService {
 
                 StringBuilder childSql = new StringBuilder();
 
-                childSql.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.urlBanner, cate.path, cate.description) ")
+                childSql.append("SELECT new vn.gamatra.dto.CategoryListDto(cate.code, cate.name, cate.urlLogo, cate.path, cate.description) ")
                         .append("FROM CategoryEntity cate ")
                         .append("WHERE cate.isParent = FALSE AND cate.isActive = TRUE ")
                         .append("AND cate.path LIKE '/").append(parentCode).append("/%'")

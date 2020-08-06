@@ -36,10 +36,4 @@ public class ProductForm implements Serializable {
     private Double price;
 
     private Integer quantity;
-
-    private String addressCity;
-
-    private String addressDistrict;
-
-    private String addressFull;
 }

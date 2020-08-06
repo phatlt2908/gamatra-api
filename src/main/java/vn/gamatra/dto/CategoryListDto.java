@@ -24,16 +24,14 @@ public class CategoryListDto implements Serializable {
     private String code;
     private String name;
     private String urlLogo;
-    private String urlBanner;
     private String path;
     private String description;
     private List<CategoryListDto> subCategory;
 
-    public CategoryListDto(String code, String name, String urlLogo, String urlBanner, String path, String description) {
+    public CategoryListDto(String code, String name, String urlLogo, String path, String description) {
         this.code = code;
         this.name = name;
         this.urlLogo = urlLogo;
-        this.urlBanner = urlBanner;
         this.path = path;
         this.description = description;
     }

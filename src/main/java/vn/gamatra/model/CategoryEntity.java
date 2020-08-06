@@ -35,11 +35,11 @@ public class CategoryEntity implements Serializable {
     @Column(name = "url_logo")
     private String urlLogo;
 
-    @Column(name = "url_banner")
-    private String urlBanner;
-
     @Column(name = "path")
     private String path;
+
+    @Column(name = "parent")
+    private String parent;
 
     @Column(name = "description")
     private String description;
@@ -49,9 +49,6 @@ public class CategoryEntity implements Serializable {
 
     @Column(name = "is_parent")
     private Boolean isParent;
-
-    @Column(name = "sort_num")
-    private Integer sortNum;
 
     @Column(name = "create_user_code")
     private String createUserCode;
